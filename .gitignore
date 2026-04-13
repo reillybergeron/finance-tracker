@@ -1,0 +1,2 @@
+# Dependencies (never commit — reinstall with npm install)
+/node_modules/
