@@ -1,32 +1,31 @@
 import React from "react";
 
-function Layout({ children, setPage }) {
+function Layout({ children, setPage, currentPage }) {
   return (
-    <div style={{ display: "flex", height: "100vh" }}>
-      
-      {/* Sidebar */}
-      <div style={{
-        width: "220px",
-        backgroundColor: "#020617",
-        padding: "20px",
-        borderRight: "1px solid #1e293b"
-      }}>
-        <h2 style={{ color: "#3b82f6" }}>Finance Tracker</h2>
+    <div className="app-shell">
+      <aside className="sidebar">
+        <div className="sidebar__brand">Finance</div>
+        <nav className="sidebar__nav" aria-label="Main">
+          <button
+            type="button"
+            className={`nav-item${currentPage === "dashboard" ? " nav-item--active" : ""}`}
+            onClick={() => setPage("dashboard")}
+          >
+            Dashboard
+          </button>
+          <button
+            type="button"
+            className={`nav-item${currentPage === "transactions" ? " nav-item--active" : ""}`}
+            onClick={() => setPage("transactions")}
+          >
+            Transactions
+          </button>
+        </nav>
+      </aside>
 
-        <div style={{ marginTop: "20px", display: "flex", flexDirection: "column", gap: "10px" }}>
-          <button onClick={() => setPage("dashboard")}>Dashboard</button>
-          <button onClick={() => setPage("transactions")}>Transactions</button>
-        </div>
-      </div>
-
-      {/* Main content */}
-      <div style={{
-        flex: 1,
-        padding: "20px",
-        overflowY: "auto"
-      }}>
-        {children}
-      </div>
+      <main className="main">
+        <div className="main__inner">{children}</div>
+      </main>
     </div>
   );
 }

@@ -31,7 +31,7 @@ function App() {
   };
 
   return (
-    <Layout setPage={setPage}>
+    <Layout setPage={setPage} currentPage={page}>
       {/* 📊 Dashboard Page */}
       {page === "dashboard" && (
         <>

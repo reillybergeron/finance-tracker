@@ -67,6 +67,10 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+					<!-- So ./mvnw spring-boot:run loads application-local.properties (gitignored) without setting SPRING_PROFILES_ACTIVE. -->
+					<profiles>
+						<profile>local</profile>
+					</profiles>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
