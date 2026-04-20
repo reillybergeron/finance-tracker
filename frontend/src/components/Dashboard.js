@@ -71,6 +71,15 @@ function Dashboard() {
 
   const categoryTotals = report.categoryTotals || {};
   const monthlyTotals = report.monthlyTotals || {};
+  const kpis = report.kpis || {};
+  const businessRules = Array.isArray(report.businessRules)
+    ? report.businessRules
+    : [];
+
+  const pct = (v) =>
+    v == null || Number.isNaN(Number(v)) ? "—" : `${Number(v).toFixed(1)}%`;
+  const moneyOrDash = (v) =>
+    v == null || Number.isNaN(Number(v)) ? "—" : fmt(Number(v));
   const categories = Object.keys(categoryTotals);
   const categoryValues = Object.values(categoryTotals);
 
@@ -303,6 +312,60 @@ function Dashboard() {
           </div>
         </div>
       </section>
+
+      <section className="panel" aria-labelledby="kpi-heading">
+        <h2 id="kpi-heading" className="panel__title">
+          Derived KPIs
+        </h2>
+        <p className="charts-section__hint" style={{ marginTop: 0 }}>
+          Server-side metrics used for trend interpretation and rule checks.
+        </p>
+        <div className="stat-grid">
+          <div className="stat">
+            <div className="stat__label">MoM spend change</div>
+            <div className="stat__value">{pct(kpis.monthOverMonthChangePercent)}</div>
+          </div>
+          <div className="stat">
+            <div className="stat__label">YoY spend change</div>
+            <div className="stat__value">{pct(kpis.yearOverYearChangePercent)}</div>
+          </div>
+          <div className="stat">
+            <div className="stat__label">Trailing 3-mo avg</div>
+            <div className="stat__value">
+              {moneyOrDash(kpis.trailingThreeMonthAverage)}
+            </div>
+          </div>
+          <div className="stat">
+            <div className="stat__label">Trailing 12-mo avg</div>
+            <div className="stat__value">
+              {moneyOrDash(kpis.trailingTwelveMonthAverage)}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {businessRules.length > 0 ? (
+        <section className="panel" aria-labelledby="rules-heading">
+          <h2 id="rules-heading" className="panel__title">
+            Business rule evaluation
+          </h2>
+          <p className="charts-section__hint" style={{ marginTop: 0 }}>
+            Named checks on aggregated spend (integrity, concentration, velocity,
+            budget pressure).
+          </p>
+          <ul className="rules-list">
+            {businessRules.map((r) => (
+              <li
+                key={r.ruleId}
+                className={`rule rule--${String(r.severity || "INFO").toLowerCase()}`}
+              >
+                <span className="rule__id">{r.ruleId}</span>
+                <span className="rule__msg">{r.message}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       <section className="panel" aria-labelledby="monthly-heading">
         <h2 id="monthly-heading" className="panel__title">

@@ -1,10 +1,18 @@
 package com.reilly.backend.controller;
 
+import com.reilly.backend.dto.CreateTransactionRequest;
 import com.reilly.backend.model.Transaction;
+import com.reilly.backend.reporting.FinancialReportingService;
 import com.reilly.backend.repository.TransactionRepository;
+import jakarta.validation.Valid;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.data.domain.*;
-import java.util.*;
+
+import java.time.LocalDate;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/transactions")
@@ -12,46 +20,20 @@ import java.util.*;
 public class TransactionController {
 
     @GetMapping("/reports/summary")
-    public Map<String, Object> getSummary() {
-
-        List<Transaction> transactions = transactionRepository.findAll();
-
-        Map<String, Double> categoryTotals = new HashMap<>();
-        Map<String, Double> monthlyTotals = new HashMap<>();
-
-        double totalSpent = 0;
-
-        for (Transaction t : transactions) {
-
-            double amount = t.getAmount();
-            totalSpent += amount;
-
-            // Category totals
-            categoryTotals.put(
-                    t.getCategory(),
-                    categoryTotals.getOrDefault(t.getCategory(), 0.0) + amount);
-
-            // Monthly totals (YYYY-MM)
-            String month = t.getDate().toString().substring(0, 7);
-
-            monthlyTotals.put(
-                    month,
-                    monthlyTotals.getOrDefault(month, 0.0) + amount);
-        }
-
-        Map<String, Object> result = new HashMap<>();
-        result.put("totalSpent", totalSpent);
-        result.put("categoryTotals", categoryTotals);
-        result.put("monthlyTotals", monthlyTotals);
-        result.put("totalTransactions", transactions.size());
-
-        return result;
+    public Map<String, Object> getSummary(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
+        return financialReportingService.buildFullReport(from, to);
     }
 
     private final TransactionRepository transactionRepository;
+    private final FinancialReportingService financialReportingService;
 
-    public TransactionController(TransactionRepository transactionRepository) {
+    public TransactionController(
+            TransactionRepository transactionRepository,
+            FinancialReportingService financialReportingService) {
         this.transactionRepository = transactionRepository;
+        this.financialReportingService = financialReportingService;
     }
 
     //PAGINATED GET
@@ -65,8 +47,20 @@ public class TransactionController {
 
     // POST
     @PostMapping
-    public Transaction createTransaction(@RequestBody Transaction transaction) {
-        return transactionRepository.save(transaction);
+    public Transaction createTransaction(@Valid @RequestBody CreateTransactionRequest body) {
+        String desc = body.description();
+        if (desc != null) {
+            desc = desc.trim();
+            if (desc.isEmpty()) {
+                desc = null;
+            }
+        }
+        Transaction entity = new Transaction(
+                body.category().trim(),
+                body.amount(),
+                body.date(),
+                desc);
+        return transactionRepository.save(entity);
     }
 
     // GET by ID

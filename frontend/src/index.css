@@ -475,3 +475,58 @@ button:disabled {
   color: var(--text-tertiary);
   padding: 24px 0;
 }
+
+.form-error {
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--danger);
+  background: var(--danger-muted);
+  border: 1px solid rgba(252, 165, 165, 0.25);
+  border-radius: var(--radius-sm);
+}
+
+.rules-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.rule {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.rule:last-child {
+  border-bottom: none;
+}
+
+.rule__id {
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.rule__msg {
+  color: var(--text-secondary);
+}
+
+.rule--pass .rule__msg {
+  color: var(--text-secondary);
+}
+
+.rule--warn .rule__msg {
+  color: var(--danger);
+}
+
+.rule--info .rule__msg {
+  color: var(--text-secondary);
+}
