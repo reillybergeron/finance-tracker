@@ -6,6 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -28,7 +29,9 @@ public class DataSeeder implements CommandLineRunner {
             return;
         }
 
-        System.out.println("Seeding 100,000 transactions...");
+        int total = 500_000;
+        int spanYears = 10;
+        System.out.println("Seeding " + total + " transactions over the past " + spanYears + " years...");
 
         Random random = new Random();
 
@@ -43,11 +46,11 @@ public class DataSeeder implements CommandLineRunner {
                 "Service payment"
         };
 
-        LocalDate startDate = LocalDate.now().minusYears(5);
+        LocalDate startDate = LocalDate.now().minusYears(spanYears);
+        LocalDate today = LocalDate.now();
+        int spanDays = (int) ChronoUnit.DAYS.between(startDate, today) + 1;
 
         List<Transaction> batch = new ArrayList<>();
-
-        int total = 200_000;
 
         for (int i = 0; i < total; i++) {
 
@@ -57,7 +60,7 @@ public class DataSeeder implements CommandLineRunner {
             Transaction t = new Transaction(
                     category,
                     5 + random.nextDouble() * 10,
-                    startDate.plusDays(random.nextInt(365 * 5)),
+                    startDate.plusDays(random.nextInt(spanDays)),
                     description
             );
 
