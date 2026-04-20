@@ -54,7 +54,7 @@ public class TransactionController {
         this.transactionRepository = transactionRepository;
     }
 
-    // ✅ PAGINATED GET
+    //PAGINATED GET
     @GetMapping
     public Page<Transaction> getTransactions(
             @RequestParam(defaultValue = "0") int page,

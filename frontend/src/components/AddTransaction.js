@@ -12,15 +12,12 @@ function AddTransaction({ onAdd }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        apiUrl("/api/transactions"),
-        {
-          category,
-          amount: parseFloat(amount),
-          date,
-          description,
-        },
-      );
+      const response = await axios.post(apiUrl("/api/transactions"), {
+        category,
+        amount: parseFloat(amount),
+        date,
+        description,
+      });
       onAdd(response.data);
       setCategory("");
       setAmount("");
@@ -32,17 +29,19 @@ function AddTransaction({ onAdd }) {
   };
 
   return (
-    <div>
-      <h2>Add Transaction</h2>
-      <form
-        onSubmit={handleSubmit}
-        style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}
-      >
+    <div className="page">
+      <header className="page__header">
+        <h1 className="page__title">Add transaction</h1>
+        <p className="page__subtitle">Record a new entry to your ledger.</p>
+      </header>
+
+      <form className="form-grid" onSubmit={handleSubmit}>
         <input
           placeholder="Category"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
           required
+          aria-label="Category"
         />
         <input
           type="number"
@@ -51,19 +50,25 @@ function AddTransaction({ onAdd }) {
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
           required
+          aria-label="Amount"
         />
         <input
           type="date"
           value={date}
           onChange={(e) => setDate(e.target.value)}
           required
+          aria-label="Date"
         />
         <input
-          placeholder="Description"
+          className="field--wide"
+          placeholder="Description (optional)"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
+          aria-label="Description"
         />
-        <button type="submit">Add</button>
+        <button type="submit" className="btn btn--primary">
+          Add
+        </button>
       </form>
     </div>
   );

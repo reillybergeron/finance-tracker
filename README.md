@@ -42,6 +42,51 @@ The UI talks to the API using **`REACT_APP_API_BASE_URL`**. If it is unset, it d
 - **Node.js** (LTS recommended) and npm.
 - **PostgreSQL** with a database the app can connect to (default name: `finance_tracker`).
 
+## Run locally (quickstart)
+
+If you just want to run the app on your machine with the defaults, follow this.
+
+### 1) Create the database
+
+In `psql` (or your SQL client), create the database:
+
+```sql
+CREATE DATABASE finance_tracker;
+```
+
+### 2) Start the backend API (Spring Boot)
+
+From the repo root in **PowerShell**:
+
+```powershell
+cd backend
+Copy-Item .\src\main\resources\application-local.properties.example .\src\main\resources\application-local.properties
+notepad .\src\main\resources\application-local.properties
+.\mvnw.cmd spring-boot:run
+```
+
+- Edit `application-local.properties` and set your local PostgreSQL password (and username if needed).
+- The API runs on **`http://localhost:8080`** by default.
+
+### 3) Start the frontend (React)
+
+Open a **second** PowerShell window/tab:
+
+```powershell
+cd frontend
+npm install
+npm start
+```
+
+- The UI runs on **`http://localhost:3000`**.
+- By default the frontend calls the API at **`http://localhost:8080`** (via `REACT_APP_API_BASE_URL`, which defaults to that value when unset).
+
+### Troubleshooting (common)
+
+- **Port already in use**: something else is using `8080` or `3000` — stop it or change the port.
+- **Database auth failed**: double-check `application-local.properties` credentials match your local Postgres.
+- **Java version mismatch**: this project targets Java **26**. If you’re on an older JDK, lower `<java.version>` in `backend/pom.xml` to your installed version.
+
 ## Getting started
 
 ### 1. Database
@@ -57,12 +102,13 @@ CREATE DATABASE finance_tracker;
 From the `backend` directory:
 
 1. Copy `src/main/resources/application-local.properties.example` to `application-local.properties` and set your **local** PostgreSQL password. That file is **gitignored** and must not be committed.
-2. Start the API with the `local` Spring profile so the local properties file is picked up:
+2. Start the API:
 
 ```powershell
-$env:SPRING_PROFILES_ACTIVE="local"
 .\mvnw.cmd spring-boot:run
 ```
+
+`spring-boot:run` is configured to use the **`local`** profile so `application-local.properties` is loaded (no need to set `SPRING_PROFILES_ACTIVE` for Maven). If you run the packaged JAR instead, use `SPRING_PROFILES_ACTIVE=local` or set `SPRING_DATASOURCE_*` as below.
 
 For hosted or CI environments, omit the `local` profile and set:
 
@@ -117,4 +163,4 @@ finance-tracker/
 
 ## License
 
-This project is provided as-is for portfolio and learning purposes. Add a `LICENSE` file if you open-source it with explicit terms.
+This project is provided as-is for portfolio and learning purposes.
