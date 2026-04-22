@@ -5,6 +5,26 @@ Full-stack personal finance app for logging expenses and viewing **spending anal
 <!-- Optional: add your live site when deployed -->
 <!-- **Live demo:** https://your-demo.example.com -->
 
+## Demo
+
+### Overview
+
+![Finance Tracker overview — dashboard and navigation](docs/readme/gifs/hero.gif)
+
+### Dashboard
+
+![Dashboard charts and analytics](docs/readme/gifs/charts.gif)
+
+### Transactions
+
+#### Add and delete
+
+![Add and delete transactions](docs/readme/gifs/transaction-add-and-delete.gif)
+
+#### Pagination
+
+![Paginated transaction list](docs/readme/gifs/transaction-next-page.gif)
+
 ## Highlights
 
 - **Dashboard** — Line charts (yearly + recent monthly), bar and pie charts for category mix, overview stats, **server-derived KPIs** (MoM / YoY %, trailing 3- and 12-month averages), and a **business rule evaluation** panel (integrity, concentration, spend velocity, budget pressure).
